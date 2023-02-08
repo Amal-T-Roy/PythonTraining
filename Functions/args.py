@@ -5,5 +5,5 @@ def student_info(*args,**kwargs) :
 courses = ['Maths','Science'] #list
 info = {'name' : 'Dude' , 'age' : 22} #dictionary
 
-student_info(*courses,**info) 
-student_info(courses,info) 
+student_info(*courses,**info) #pass as positional and keyword args
+student_info(courses,info) #pass only as positional args

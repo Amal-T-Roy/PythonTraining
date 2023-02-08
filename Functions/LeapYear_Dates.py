@@ -11,9 +11,9 @@ def If_Leap_Year(year) :
     else :
         return 'Invalid year input'
 
-print(If_Leap_Year(2001))
-print(If_Leap_Year(2000))
-print(If_Leap_Year(2024))
+# print(If_Leap_Year(2001)) Testing
+# print(If_Leap_Year(2000))
+# print(If_Leap_Year(2024))
 
 def days_in_month(month) :
     if(month < 0 or month >12) :
@@ -27,9 +27,7 @@ def days_in_month(month) :
 
 
 year = int(input('Enter the year'))
-
 print('Leap Year = ',If_Leap_Year(year))
 
 Month = int(input('Enter the month as digit'))
-
 print('No.of days = ',days_in_month(Month))
