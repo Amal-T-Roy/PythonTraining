@@ -8,4 +8,4 @@ Tom.speak()
 
 Tom.age = 10
 
-print(Tom())
+print(Tom.age)
