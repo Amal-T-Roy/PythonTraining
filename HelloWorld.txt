@@ -1,4 +1,8 @@
 Woah that was awesome
 NeverMindHIHIBruhHIHIBruh
 Woah that was awesome
+<<<<<<< HEAD
 NeverMindTesting
+=======
+NeverMindTesting
+>>>>>>> origin/main
