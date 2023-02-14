@@ -6,8 +6,8 @@ SMTP_Port = 587                      # Standard secure SMTP port
 SMTP_Server = "smtp.gmail.com"       # Google SMTP server
 
 #credentials
-email_from = itsmeamalroy@gmail.com
-email_to = itsmeamalroy@gmail.com
+email_from = 'itsmeamalroy@gmail.com'
+email_to = 'itsmeamalroy@gmail.com'
 pswd = "spqeubsoqnfpjjwi" #access this externally when doing main projects as we dont want password out in open
 
 
@@ -20,7 +20,8 @@ simple_email_context = ssl.create_default_context()
 try:
     print("Connecting to server")
     TIE_server = smtplib.SMTP(SMTP_Server,SMTP_Port)
-    TIE_server = starttls(context = simple_email_context)
+    TIE_server.starttls(context = simple_email_context)
+    context = ssl.create_default_context()
     TIE_server.login(email_from,pswd)
     print("Connected to server :-)")
 
