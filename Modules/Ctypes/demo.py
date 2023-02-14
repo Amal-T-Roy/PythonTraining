@@ -1,5 +1,12 @@
 import ctypes
+
 #Cmd to create *.so file from source file:gcc -fPIC -shared -o clibrary.so Clib.c
+"""
+fPIC option in GCC enables the address of shared libraries 
+to be relative so that the executable is independent 
+of the position of libraries
+fPIC == "force Position Independent Code".
+"""
 
 #create an object for c library->Absolute path reccommended
 clibrary = ctypes.CDLL("/home/amalr/Desktop/PythonTraining/Modules/Ctypes/clibrary.so") #Dynamic linked library

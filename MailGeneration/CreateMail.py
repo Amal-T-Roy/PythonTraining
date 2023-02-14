@@ -19,10 +19,16 @@ simple_email_context = ssl.create_default_context()
 
 try:
     print("Connecting to server")
-    TIE_server = smtplib.SMTP(SMTP_Server,SMTP_Port)
+    TIE_server = smtplib.SMTP(SMTP_Server,SMTP_Port) #start server
     TIE_server.starttls(context = simple_email_context)
-    context = ssl.create_default_context()
-    TIE_server.login(email_from,pswd)
+    """
+    inform the email server that the email client wants to 
+    upgrade from an insecure connection to a secure one using TLS or SSL
+    TLS = Transport Layer Security
+    SSL = Secure sockets Layer
+    """
+    context = ssl.create_default_context() # returns a new context with secure default settings
+    TIE_server.login(email_from,pswd) #logins
     print("Connected to server :-)")
 
     print()
