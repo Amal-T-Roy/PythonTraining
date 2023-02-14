@@ -19,5 +19,5 @@ print(PalindromeChecker(S1))
 x = add #saved function object to a variable
 print(x(100,200))
 
-g = cal.modulusof(4,5)
+g = cal.modulusof(4,5) #aliased function
 print('{} is the modulus'.format(g))
