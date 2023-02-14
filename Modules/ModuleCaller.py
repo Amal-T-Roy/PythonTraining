@@ -9,7 +9,6 @@ print(add(5,6))
 print(add(5,7))
 print(add(8,9))
 
-
 S1 = input('Enter String 1:\n')
 S2 = input('Enter String 2:\n')
 

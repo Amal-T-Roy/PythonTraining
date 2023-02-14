@@ -2,6 +2,7 @@ import subprocess
 import os
 
 print(os.getcwd())
+
 p1 = subprocess.run(['cat','Test.txt'],capture_output = True, text = True)
 
 #stdout of 1st process is passed as i/p to p2

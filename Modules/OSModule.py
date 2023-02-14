@@ -45,4 +45,4 @@ print(os.environ.get('HOME')) #Just that of home
 print(os.path.isfile('opnproject')) #retun true if arg is a file
 print(os.path.isdir('opnproject')) #retun true if arg is a directory
 
-print(os.path.splitext('Test.txt'))
+print(os.path.splitext('Test.txt')) #Splits root and extensio of a file
