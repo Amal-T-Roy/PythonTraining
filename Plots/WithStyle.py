@@ -15,8 +15,8 @@ y2 = [6,15,7]
 plt.plot(x,y,'g',label='L1',linewidth =3) #'g' sets colour = green
 plt.plot(x2,y2,'r',label='L2',linewidth =3) #'r' sets colour = red
 
-#Add titles and labels
-plt.title('Compare Graphs')
+#Add title and labels
+plt.title('Compare Graphs') # set title
 plt.xlabel('X-axis')
 plt.ylabel('Y-axis')
 
@@ -24,7 +24,7 @@ plt.ylabel('Y-axis')
 plt.legend()
 
 #Add grid
-plt.grid(True,color = 'k')
+plt.grid(True,color = 'k') # k = set colour of grid lines as black
 
 #Show the output
 plt.show()
