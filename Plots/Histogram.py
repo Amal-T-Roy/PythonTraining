@@ -13,8 +13,8 @@ sections = [0,10,20,30,40,50,60,70,80,90,100]
 #Plot
 # plt.hist(ages,sections,histtype='bar',rwidth=0.5) #Looks like bar graph
 # plt.hist(ages,sections,histtype='barstacked',rwidth=0.5) #looks like bar graph when using only 1 dataset
-# plt.hist(ages,sections,histtype='step',rwidth=0.5) #step graph,with insides clear
-plt.hist(ages,sections,histtype='stepfilled',rwidth=0.5) #step graph,with insides filled
+plt.hist(ages,sections,histtype='step',rwidth=0.5) #step graph,with insides clear
+#plt.hist(ages,sections,histtype='stepfilled',rwidth=0.5) #step graph,with insides filled
 
 #Add labels
 plt.xlabel('Age Range')
