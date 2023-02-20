@@ -30,3 +30,4 @@ print(x.args) #Prints the arguments passed
 #Pipe into a file   
 with open('Output.txt','w') as f:
     x = subprocess.run('ls',stdout = f,text = True)
+    print(x.stderr)

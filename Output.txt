@@ -7,5 +7,9 @@ Functions
 Hello.py
 HelloWorld.txt
 Iterators&generators
+MailGeneration
 Modules
 Output.txt
+Pandas
+Plots
+Test.txt
