@@ -7,7 +7,7 @@ List.append(8)
 print( List)
 List.remove(3)
 print( List)
-x = List.index(5, 0, len(List))
+x = List.index(5, 0, len(List)) # Value,start,stop
 print(x)
 List.append(4)
 print(List.count(4))
@@ -15,7 +15,7 @@ List.sort()
 print(List)
 List.reverse()
 print(List)
-List.insert(0,9)
+List.insert(3,9) # index,value
 print(List)
-print(List.pop(4))
+print(List.pop(4)) # Pops val at 4th index
 print(List)
