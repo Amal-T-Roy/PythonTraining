@@ -1,0 +1,14 @@
+Anagram.py
+ArgParse.py
+Calculations.py
+Ctypes
+JSON
+ModuleCaller.py
+MutExParsing.py
+OSModule.py
+Output.txt
+PipesubProcess.py
+__pycache__
+SubProcess.py
+SysModule.py
+Utils

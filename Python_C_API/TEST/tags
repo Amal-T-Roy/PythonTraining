@@ -1,0 +1,25 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BLOCK_SIZE	main.c	15;"	d	file:
+CC	Makefile	/^CC = gcc$/;"	m
+CFLAGS	Makefile	/^CFLAGS = -Werror $/;"	m
+Decrypt_As_Blocks	main.c	/^void Decrypt_As_Blocks(unsigned char *Message, int NumberOfBlocks, unsigned char *Key)$/;"	f
+Encrypt_As_Blocks	main.c	/^void Encrypt_As_Blocks(unsigned char *Message, int NumberOfBlocks, unsigned char *Key)$/;"	f
+GenerateKey	key_generator.py	/^def GenerateKey():$/;"	f
+GenerateKey	main.c	/^void GenerateKey()$/;"	f
+GeneratedKey	main.c	/^unsigned char GeneratedKey[16];	  \/*Array to store key*\/$/;"	v
+Get_Number_Of_Blocks	main.c	/^int Get_Number_Of_Blocks(unsigned char *Message)$/;"	f
+Key	key_generator.py	/^Key = GenerateKey()  # Random Key is generated$/;"	v
+LDFLAGS	Makefile	/^LDFLAGS =  -lcrypto$/;"	m
+Message	main.c	/^unsigned char Message[128] = {0}; \/*Array to store message*\/$/;"	v
+ReadKey	main.c	/^unsigned char *ReadKey(void)$/;"	f
+XOR_With_Key	main.c	/^void XOR_With_Key(unsigned char *Message, unsigned char *Key, int NumberOfBlocks)$/;"	f
+function_name	module_name.py	/^def function_name():$/;"	f
+main	CallKey.c	/^void main()$/;"	f
+main	Run.c	/^void main()$/;"	f
+main	main.c	/^int main()$/;"	f
+x	module_name.py	/^x = function_name()$/;"	v

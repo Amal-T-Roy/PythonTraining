@@ -1,0 +1,277 @@
+/**
+ * *Command : gcc <file.c> -lcrypto
+ * !The libcrypto.so shared library should be present in the PWD
+ * !openssl library should be installed
+*/
+
+
+#include <Python.h> /*Contains the stdlib and stdio libraries*/
+#include <unistd.h> /*Contains getcwd() finction*/
+#include <openssl/aes.h>
+
+#define BLOCK_SIZE 16
+
+/*Global variables*/
+
+unsigned char GeneratedKey[16];	  /*Array to store key*/
+unsigned char Message[128] = {0}; /*Array to store message*/
+
+/*Function declarations*/
+
+void GenerateKey(void);
+unsigned char *ReadKey(void);
+int Get_Number_Of_Blocks(unsigned char *Message);
+void XOR_With_Key(unsigned char *Message, unsigned char *Key, int NumberOfBlocks);
+void Encrypt_As_Blocks(unsigned char *Message, int NumberOfBlocks, unsigned char *Key);
+void Decrypt_As_Blocks(unsigned char *Message, int NumberOfBlocks, unsigned char *Key);
+
+int main()
+{
+	/*Variable to store the number of 16 byte blocks of the message*/
+	int NumberOfBlocks = 0;
+
+	/*Get message from CLI*/
+	printf("Enter the message:\n");
+	fgets(Message, 128, stdin); /* get message as keyboard input*/
+	printf("\n");
+
+	NumberOfBlocks = Get_Number_Of_Blocks(Message); /*Stores number of 16 byte blocks present in message.Last block might contain padding*/
+
+	printf("\nOriginal message in Hex:\n");
+	for (int i = 0; i < strlen((const char *)Message); i++)	{
+		printf("%02x ", Message[i]); /*Print atleast 2 digits of the hex value*/
+	}
+	printf("\n");
+
+	unsigned char *KeyPtr; /*Pointer to array containing  random generated key*/
+	GenerateKey();	       /*Calling function that calls python script to generate key*/
+	KeyPtr = ReadKey();    /*Reads key from file*/
+
+	/*XOR with key*/
+	XOR_With_Key(Message, KeyPtr, NumberOfBlocks);
+	printf("\nAfter XOR:\n");
+	for (int i = 0; i < NumberOfBlocks * BLOCK_SIZE; i++) {
+		printf("%02x ", Message[i]);
+	}
+	printf("\n");
+
+	/*Encrypt message using AES*/
+	Encrypt_As_Blocks(Message, NumberOfBlocks, KeyPtr);
+	printf("\nAfter Encryption->HEX:\n");
+	for (int i = 0; i < NumberOfBlocks * BLOCK_SIZE; i++) {
+		printf("%02x ", Message[i]);
+	}
+	printf("\n");
+
+	printf("\nAfter Encryption->ASCII:\n");
+	for (int i = 0; i < NumberOfBlocks * BLOCK_SIZE; i++) {
+		printf("%c", Message[i]);
+	}
+	printf("\n");
+
+	/*Decrypt message using AES*/
+	Decrypt_As_Blocks(Message, NumberOfBlocks, KeyPtr);
+
+	/*Display the message after decryption as hex values*/
+	printf("\nAfter Decryption->HEX:\n");
+	for (int i = 0; i < strlen((const char *)Message); i++) {
+		printf("%02x ", Message[i]);
+	}
+	printf("\n");
+
+	/*Display the message after decryption in ASCII values*/
+	printf("\nAfter Decryption->ASCII:\n");
+	for (int i = 0; i < strlen((const char *)Message); i++) {
+		printf("%c", Message[i]);
+	}
+	printf("\n");
+
+	/*XOR each 16 byte block with the key*/
+	XOR_With_Key(Message, KeyPtr, NumberOfBlocks);
+
+	/*Display the message after XOR operation as hex values*/
+	printf("\nAfter XOR operation->HEX:\n");
+	for (int i = 0; i < strlen((const char *)Message); i++) {
+		printf("%02x ", Message[i]);
+	}
+	printf("\n");
+
+	/*Display the message after XOR operation as ASCII values*/
+	printf("\nFinal decrypted Message:\n");
+	for (int i = 0; i < strlen((const char *)Message); i++) {
+		printf("%c", Message[i]);
+	}
+	printf("\n");
+	return 0;
+}
+
+/**
+ **Function to cal python script that generates random key 
+ *TODO:Use c-python API to call the key_generator function 
+ * */
+void GenerateKey()
+{
+	printf("\nGenerating Key: \n");
+	
+	/*Initialise*/
+	Py_Initialize();
+
+	/*Create file pointer of python script*/
+	FILE* fp = fopen("key_generator.py","r");
+
+	/*Run file*/
+	PyRun_SimpleFile(fp,"key_generator.py");
+
+	/*Close file pointer*/
+	fclose(fp);
+
+
+	/*Close*/
+	Py_Finalize(); 
+}
+
+/*Function to read key from file*/
+unsigned char *ReadKey(void)
+{
+
+    char cwd[1024]; /*Array to store CWD*/
+    char StringKey[32] = {0}; /*Array to store the 32 characters from file*/
+     
+    if (getcwd(cwd, sizeof(cwd)) != NULL) { /*function declared in unistd.h*/
+        printf("Current working directory: %s\n", cwd);
+    } else {
+        perror("getcwd() error"); /*Prints error message*/
+    }
+
+    FILE *file; /*Pointer to the file struct*/
+    file = fopen(strcat(cwd,"/key.txt"), "r"); /*Open text file*/
+    fgets(StringKey, 256, file); /*Read 128 bits from file*/
+    printf("StringKey :\n");
+    for (int i = 0; i < 32; i++) {
+        printf("%02x ", StringKey[i]); /*Display the key*/
+    }
+    printf("\n");
+    
+    for (int i = 0;i < 32; i++) {
+		if(StringKey[i] > 96) {
+			StringKey[i] = StringKey[i] - 'a' + 10; /*ASCII to decimal  conversion*/
+		}
+		 else if(StringKey[i] >= '0' && StringKey[i] <= '9') {
+			StringKey[i] = StringKey[i] - '0'; /*ASCII to decimal  conversion*/
+		}
+		else {
+			printf("Error\n");
+		}
+    }
+    printf("To int:\n");
+    for(int i=0;i<32;i++) {
+		printf("%d ",StringKey[i]);
+	}
+	printf("\n ");
+        
+        
+    int current = 0;
+    for (int i = 0;i < 32; i += 2) {
+        	GeneratedKey[current++] = (int)(GeneratedKey[i] << 4 | GeneratedKey[i+1]) & 0xFF;
+        	printf("%02x ",GeneratedKey[i]);
+    }
+	printf("\n ");
+	printf("Final:\n");
+	for(int i = 0;i < 16;i++) {
+			printf("%02x ",GeneratedKey[i] & 0xFF);
+	}
+	printf("\n ");
+    
+    return GeneratedKey;
+}
+
+/*Function to calculate the number of 128 byte blocks in the message*/
+int Get_Number_Of_Blocks(unsigned char *Message)
+{
+	/*Number of characters in message*/
+	int NumberOfCharacters = strlen((const char *)Message);
+
+	/*Number of 16byte blocks*/
+	int NumberOfBlocks = NumberOfCharacters / BLOCK_SIZE;
+
+	if ((NumberOfCharacters % 16) != 0)
+		NumberOfBlocks = ((NumberOfCharacters / BLOCK_SIZE) + 1);
+
+	/*Display number of characters and 128 bit blocks*/
+	printf("Number Of Characters = %d\n", NumberOfCharacters);
+	printf("Number Of 128-bit Blocks = %d\n", NumberOfBlocks);
+	return NumberOfBlocks;
+}
+
+/*Function to XOR each 16 byte block in the array passed as argument with the 16 byte key*/
+void XOR_With_Key(unsigned char *Message, unsigned char *Key, int NumberOfBlocks)
+{
+	int i, j, k = 0; /*Iterators*/
+	unsigned char BLOCK[16] = {0};
+	printf("\nXORing with Key:\n");
+	for (i = 0; i < NumberOfBlocks; i++) {
+		for (j = 0; j < BLOCK_SIZE; j++) {
+			BLOCK[j] = *(Message + (i * BLOCK_SIZE) + j); /*Copying elements of messages to create a 16-byte block*/
+		}
+		/*XOR with key*/
+		for (k = 0; k < BLOCK_SIZE; k++) {
+			BLOCK[k] ^= *(Key + k); /*XOR the block with key*/
+			*(Message + (i * BLOCK_SIZE) + k) = BLOCK[k]; /*Updating the message with result of XOR operation */
+		}
+	}
+}
+
+/*Function to encrypt each 16byte block of the array passed as argument using AES algorithm*/
+void Encrypt_As_Blocks(unsigned char *Message, int NumberOfBlocks, unsigned char *Key)
+{
+
+	unsigned char UNENCRYPTED_BLOCK[16] = {0}; /*16byte long block to store elements of unencypted message*/
+	unsigned char ENCRYPTED_BLOCK[16] = {0};   /*16byte long block to store elements of message after encryption*/
+	AES_KEY aesKey;				   /*Structure containg roundkeys and number of rounds,the values are filled by the library*/
+	unsigned char iv[] = "InitializationVe";   /* 128-bit Initialisation Variable*/
+	/*Set encryption key*/
+	if (AES_set_encrypt_key(GeneratedKey, 128, &aesKey) < 0) {
+		fprintf(stderr, "Could not set encryption key.\n");
+		exit(1);
+	}
+	/*Considering each block,encrypt it,copy to final array*/
+	for (int i = 0; i < NumberOfBlocks; i++) {
+		for (int j = 0; j < BLOCK_SIZE; j++) {
+			UNENCRYPTED_BLOCK[j] = *(Message + (i * BLOCK_SIZE) + j); /*Copying elements of message to the 16 byteblock*/
+		}
+
+		AES_encrypt(UNENCRYPTED_BLOCK, ENCRYPTED_BLOCK, &aesKey); /*Encrypting the message using openssl implementation of AES*/
+
+		/*Copy encrypted block to final message*/
+		for (int k = 0; k < BLOCK_SIZE; k++) {
+			*(Message + (i * BLOCK_SIZE) + k) = ENCRYPTED_BLOCK[k]; /*Updating message with result of AES_encryp function */
+		}
+	}
+}
+
+/*Function to decrypt each 16byte block of the array passed as argument using AES algorithm*/
+void Decrypt_As_Blocks(unsigned char *Message, int NumberOfBlocks, unsigned char *Key)
+{
+
+	unsigned char ENCRYPTED_BLOCK[16] = {0}; /*Array to store a 128 bit block of original message*/
+	unsigned char DECRYPTED_BLOCK[16] = {0}; /*Array to store the output of decryption function*/
+	AES_KEY aesKey;				 /*Structure containg roundkeys and number of rounds,the values are filled by the library*/
+	unsigned char iv[] = "InitializationVe"; /* 128-bit Initialisation Variable*/
+	if (AES_set_decrypt_key(GeneratedKey, 128, &aesKey) < -1) {
+		fprintf(stderr, "Could not set decryption key.\n");
+		exit(1);
+	}
+	/*Considering each block,decrypt it,copy to final array*/
+	for (int i = 0; i < NumberOfBlocks; i++) {
+		for (int j = 0; j < BLOCK_SIZE; j++) {
+			ENCRYPTED_BLOCK[j] = *(Message + (i * BLOCK_SIZE) + j);
+		}
+
+		AES_decrypt(ENCRYPTED_BLOCK, DECRYPTED_BLOCK, &aesKey); /*Decrypt message using openssl implementation of AES*/
+
+		/*Copy decrypted block to final message*/
+		for (int k = 0; k < BLOCK_SIZE; k++) {
+			*(Message + (i * BLOCK_SIZE) + k) = DECRYPTED_BLOCK[k];
+		}
+	}
+}
